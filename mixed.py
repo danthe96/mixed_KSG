@@ -63,20 +63,22 @@ def Mixed_CMI(x, y, z, k=5):
     if z.ndim == 1:
         z = z.reshape((N, 1))
     data = np.concatenate((x, y, z), axis=1)
+    xz = np.concatenate((x, z), axis=1)
+    yz = np.concatenate((y, z), axis=1)
 
     tree_xyz = ss.cKDTree(data)
     tree_z = ss.cKDTree(z)
-    tree_xz = ss.cKDTree(np.concatenate((x, z), axis=1))
-    tree_yz = ss.cKDTree(np.concatenate((y, z), axis=1))
+    tree_xz = ss.cKDTree(xz)
+    tree_yz = ss.cKDTree(yz)
 
     inf = float('inf')
     knn_dis = [tree_xyz.query(point, k+1, p=inf)[0][k] for point in data]
     ans = 0
     for i in range(N):
         kp = len(tree_xyz.query_ball_point(data[i], knn_dis[i], p=inf))
-        nxz = len(tree_xz.query_ball_point(x[i], knn_dis[i], p=inf))
-        nyz = len(tree_yz.query_ball_point(y[i], knn_dis[i], p=inf))
-        nz = len(tree_z.query_ball_point(y[i], knn_dis[i], p=inf))
+        nxz = len(tree_xz.query_ball_point(xz[i], knn_dis[i], p=inf))
+        nyz = len(tree_yz.query_ball_point(yz[i], knn_dis[i], p=inf))
+        nz = len(tree_z.query_ball_point(z[i], knn_dis[i], p=inf))
         ans += (digamma(kp) - digamma(nxz) - digamma(nyz) + digamma(nz)) / N
     return ans + (z.shape[1] - 1) * log(N)
 

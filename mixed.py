@@ -75,10 +75,10 @@ def Mixed_CMI(x, y, z, k=5):
     knn_dis = [tree_xyz.query(point, k+1, p=inf)[0][k] for point in data]
     ans = 0
     for i in range(N):
-        kp = len(tree_xyz.query_ball_point(data[i], knn_dis[i], p=inf))
-        nxz = len(tree_xz.query_ball_point(xz[i], knn_dis[i], p=inf))
-        nyz = len(tree_yz.query_ball_point(yz[i], knn_dis[i], p=inf))
-        nz = len(tree_z.query_ball_point(z[i], knn_dis[i], p=inf))
+        kp = len(tree_xyz.query_ball_point(data[i], knn_dis[i]-1e-15, p=inf))
+        nxz = len(tree_xz.query_ball_point(xz[i], knn_dis[i]-1e-15, p=inf))
+        nyz = len(tree_yz.query_ball_point(yz[i], knn_dis[i]-1e-15, p=inf))
+        nz = len(tree_z.query_ball_point(z[i], knn_dis[i]-1e-15, p=inf))
         ans += (digamma(kp) - digamma(nxz) - digamma(nyz) + digamma(nz)) / N
     return ans + (z.shape[1] - 1) * log(N)
 

@@ -66,8 +66,8 @@ def Mixed_CMI(x, y, z, k=5):
 
     tree_xyz = ss.cKDTree(data)
     tree_z = ss.cKDTree(z)
-    tree_xz = ss.cKDTree(np.concatenate(x, z), axis=1)
-    tree_yz = ss.cKDTree(np.concatenate(y, z), axis=1)
+    tree_xz = ss.cKDTree(np.concatenate((x, z), axis=1))
+    tree_yz = ss.cKDTree(np.concatenate((y, z), axis=1))
 
     inf = float('inf')
     knn_dis = [tree_xyz.query(point, k+1, p=inf)[0][k] for point in data]
